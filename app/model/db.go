@@ -21,7 +21,8 @@ type dbConnection struct {
 }
 
 func Init() error {
-	envLoadErr := godotenv.Load("../config/.env")
+	envLoadErr := godotenv.Load("config/.env")
+
 	if envLoadErr != nil {
 		log.Fatal("Could not set the environment")
 		return envLoadErr

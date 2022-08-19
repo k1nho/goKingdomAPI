@@ -1,13 +1,18 @@
 package main
 
 import (
-	"net/http"
+	"log"
 
-	"github.com/gorilla/mux"
+	"github.com/k1nho/goKingdomAPI/controllers"
+	"github.com/k1nho/goKingdomAPI/model"
 )
 
 func main() {
-	router := mux.NewRouter()
+	err := model.Init()
+	if err != nil {
+		log.Fatal("could not initialize db")
+		return
+	}
 
-	http.ListenAndServe(":8000", router)
+	controllers.RunServer()
 }

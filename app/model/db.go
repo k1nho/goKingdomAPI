@@ -10,7 +10,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
-var db *sql.DB
+var DB *sql.DB
 
 type dbConnection struct {
 	Host     string
@@ -41,14 +41,16 @@ func Init() error {
 	connString := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s", conn.Host, conn.Port, conn.User, conn.Password, conn.DBName)
 
 	var err error
-	db, err = sql.Open("postgres", connString)
+	DB, err = sql.Open("postgres", connString)
 	if err != nil {
 		log.Fatal("Could not open database connection")
 		return err
 	}
 
+	defer DB.Close()
+
 	// test connection
-	err = db.Ping()
+	err = DB.Ping()
 	if err != nil {
 		log.Fatal("Could not establish database connection")
 		return err

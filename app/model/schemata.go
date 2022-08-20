@@ -39,12 +39,12 @@ type SalesStatement struct {
 }
 
 type Product struct {
-	ProductID uint64  `json:"product_id"`
-	Name      string  `json:"name"`
-	Price     float64 `json:"price"`
+	ProductID   uint64  `json:"product_id"`
+	ProductName string  `json:"product_name"`
+	Price       float64 `json:"price"`
 }
 
 type Exports struct {
-	ExportID uint64 `json:"export_id"`
-	Name     string `json:"name"`
+	ExportID   uint64 `json:"export_id"`
+	ExportName string `json:"export_name"`
 }

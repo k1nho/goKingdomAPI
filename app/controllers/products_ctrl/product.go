@@ -7,7 +7,6 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/k1nho/goKingdomAPI/model"
-	"github.com/k1nho/goKingdomAPI/model/products"
 )
 
 // /api/kingdom/products
@@ -15,7 +14,7 @@ func GetProducts(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var res []model.Product
 
-	res, err := products.FetchProducts()
+	res, err := model.FetchProducts()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
@@ -30,14 +29,14 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var product model.Product
 	param := mux.Vars(r)["product_id"]
-	id, err := strconv.Atoi(param)
+	id, err := strconv.ParseUint(param, 10, 64)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
 		return
 	}
 
-	product, err = products.FetchProduct(id)
+	product, err = model.FetchProduct(id)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))

@@ -20,12 +20,12 @@ type dbConnection struct {
 	DBName   string
 }
 
-func Init() error {
+func Init() {
 	envLoadErr := godotenv.Load("config/.env")
 
 	if envLoadErr != nil {
 		log.Fatal("Could not set the environment")
-		return envLoadErr
+		return
 	}
 
 	// connection string object
@@ -44,7 +44,7 @@ func Init() error {
 	DB, err = sql.Open("postgres", connString)
 	if err != nil {
 		log.Fatal("Could not open database connection")
-		return err
+		return
 	}
 
 	defer DB.Close()
@@ -53,9 +53,7 @@ func Init() error {
 	err = DB.Ping()
 	if err != nil {
 		log.Fatal("Could not establish database connection")
-		return err
+		return
 	}
-
-	return nil
 
 }

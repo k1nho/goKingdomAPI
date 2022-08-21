@@ -38,7 +38,7 @@ func Init() {
 	}
 
 	// create connection string
-	connString := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s", conn.Host, conn.Port, conn.User, conn.Password, conn.DBName)
+	connString := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", conn.Host, conn.Port, conn.User, conn.Password, conn.DBName)
 
 	var err error
 	DB, err = sql.Open("postgres", connString)
@@ -46,8 +46,6 @@ func Init() {
 		log.Fatal("Could not open database connection")
 		return
 	}
-
-	defer DB.Close()
 
 	// test connection
 	err = DB.Ping()

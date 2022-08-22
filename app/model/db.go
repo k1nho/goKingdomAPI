@@ -55,3 +55,7 @@ func Init() {
 	}
 
 }
+
+func Close() error {
+	return DB.Close()
+}

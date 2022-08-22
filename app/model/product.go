@@ -64,3 +64,14 @@ func UpdateProduct(product Product) error {
 
 	return nil
 }
+
+func DeleteProduct(id uint64) error {
+	sqlQuery := `DELETE FROM products WHERE product_id=$1;`
+
+	_, err := DB.Exec(sqlQuery, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

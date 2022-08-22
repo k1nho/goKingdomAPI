@@ -71,6 +71,7 @@ func CreateProduct(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// /api/kingdom/products/{product_id} (POST)
 func UpdateProduct(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var product model.Product
@@ -83,6 +84,28 @@ func UpdateProduct(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = model.UpdateProduct(product)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
+// /api/kingdom/products/{product_id} (DELETE)
+func DeleteProduct(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	param := mux.Vars(r)["product_id"]
+	id, err := strconv.ParseUint(param, 10, 64)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	err = model.DeleteProduct(id)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))

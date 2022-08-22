@@ -5,16 +5,16 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	controllers "github.com/k1nho/goKingdomAPI/controllers/products_ctrl"
 )
 
 var router *mux.Router
 
 func initHandlers() {
-	router.HandleFunc("/api/kingdom/products", controllers.GetProducts).Methods("GET")
-	router.HandleFunc("/api/kingdom/products", controllers.CreateProduct).Methods("POST")
-	router.HandleFunc("/api/kingdom/products/{product_id}", controllers.UpdateProduct).Methods("POST")
-	router.HandleFunc("/api/kingdom/products/{product_id}", controllers.GetProduct).Methods("GET")
+	router.HandleFunc("/api/kingdom/products", GetProducts).Methods("GET")
+	router.HandleFunc("/api/kingdom/products", CreateProduct).Methods("POST")
+	router.HandleFunc("/api/kingdom/products/{product_id}", UpdateProduct).Methods("PUT")
+	router.HandleFunc("/api/kingdom/products/{product_id}", GetProduct).Methods("GET")
+	router.HandleFunc("/api/kingdom/products/{product_id}", DeleteProduct).Methods("DELETE")
 }
 
 func RunServer() {

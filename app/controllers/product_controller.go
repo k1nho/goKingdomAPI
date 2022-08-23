@@ -9,6 +9,10 @@ import (
 	"github.com/k1nho/goKingdomAPI/model"
 )
 
+type batchReq struct {
+	IDBatch []uint64 `json:"idbatch"`
+}
+
 // /api/kingdom/products (GET)
 func GetProducts(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -113,4 +117,33 @@ func DeleteProduct(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
+}
+
+// /api/kingdom/products/batch
+func FetchProductBatch(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	var productBatch []model.Product
+	var productIDs batchReq
+
+	err := json.NewDecoder(r.Body).Decode(&productIDs)
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+		return
+	}
+	// get the requested batch
+	for i := 0; i < len(productIDs.IDBatch); i++ {
+		product, err := model.FetchProduct(productIDs.IDBatch[i])
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+		productBatch = append(productBatch, product)
+	}
+
+	json.NewEncoder(w).Encode(productBatch)
+
 }

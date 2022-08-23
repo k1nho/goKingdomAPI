@@ -10,11 +10,13 @@ import (
 var router *mux.Router
 
 func initHandlers() {
-	router.HandleFunc("/api/kingdom/products", GetProducts).Methods("GET")
-	router.HandleFunc("/api/kingdom/products", CreateProduct).Methods("POST")
-	router.HandleFunc("/api/kingdom/products/{product_id}", UpdateProduct).Methods("PUT")
-	router.HandleFunc("/api/kingdom/products/{product_id}", GetProduct).Methods("GET")
-	router.HandleFunc("/api/kingdom/products/{product_id}", DeleteProduct).Methods("DELETE")
+	productsRouter := router.PathPrefix("/api/kingdom/products").Subrouter()
+	productsRouter.HandleFunc("", GetProducts).Methods("GET")
+	productsRouter.HandleFunc("", CreateProduct).Methods("POST")
+	productsRouter.HandleFunc("/{product_id}", UpdateProduct).Methods("PUT")
+	productsRouter.HandleFunc("/{product_id}", GetProduct).Methods("GET")
+	productsRouter.HandleFunc("/{product_id}", DeleteProduct).Methods("DELETE")
+	productsRouter.HandleFunc("/batch", FetchProductBatch).Methods("POST")
 }
 
 func RunServer() {

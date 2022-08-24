@@ -48,14 +48,35 @@ func GetExport(id uint64) (Exports, error) {
 }
 
 func CreateExport(export Exports) error {
-	sqlQuery = `INSERT INTO exports(export_name) VALUES($1);`
+	sqlQuery := `INSERT INTO exports(export_name) VALUES($1);`
+
+	_, err := DB.Exec(sqlQuery, export.ExportName)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func UpdateExport(export Exports) error {
+	sqlQuery := `UPDATE exports SET export_name=$1 WHERE export_id=$2;`
+
+	_, err := DB.Exec(sqlQuery, export.ExportName, export.ExportID)
+	if err != nil {
+		return err
+	}
+
+	return nil
 
 }
 
-func UpdateExport() error {
+func DeleteExport(id uint64) error {
+	sqlQuery := `DELETE FROM exports WHERE export_id=$1;`
 
-}
+	_, err := DB.Exec(sqlQuery, id)
+	if err != nil {
+		return err
+	}
 
-func DeleteExport() error {
-
+	return nil
 }

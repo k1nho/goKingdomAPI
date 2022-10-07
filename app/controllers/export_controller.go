@@ -71,7 +71,7 @@ func CreateExport(w http.ResponseWriter, r *http.Request) {
   
 }
 
-// /api/kingdom/exports/{export_id}
+// /api/kingdom/exports/{export_id} (UPDATE)
 func UpdateExport(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
   var export model.Exports
@@ -85,6 +85,30 @@ func UpdateExport(w http.ResponseWriter, r *http.Request) {
   }
 
   err = model.UpdateExport(export)
+  if err != nil {
+    w.WriteHeader(http.StatusInternalServerError)
+    w.Write([]byte(err.Error()))
+    return
+  }
+
+  w.WriteHeader(http.StatusOK) 
+  
+}
+
+// /api/kingdom/exports/{export_id} (DELETE)
+func DeleteExport(w http.ResponseWriter, r *http.Request) {
+  w.Header().Set("Content-Type", "application/json")
+  
+  param := mux.Vars(r)["export_id"] 
+  id, err := strconv.ParseUint(param, 10, 64)
+
+  if err != nil {
+    w.WriteHeader(http.StatusInternalServerError)
+    w.Write([]byte(err.Error()))
+    return
+  }
+
+  err = model.DeleteExport(id)
   if err != nil {
     w.WriteHeader(http.StatusInternalServerError)
     w.Write([]byte(err.Error()))

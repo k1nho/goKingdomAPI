@@ -1,5 +1,10 @@
 package model
 
+import (
+	"database/sql"
+	"fmt"
+)
+
 func GetExports() ([]Exports, error) {
 	sqlQuery := `SELECT * FROM exports;`
 
@@ -29,18 +34,13 @@ func GetExport(id uint64) (Exports, error) {
 
 	var export Exports
 
-	rows, err := DB.Query(sqlQuery, id)
-	if err != nil {
-		return export, err
-	}
+	row := DB.QueryRow(sqlQuery, id)
 
-	defer rows.Close()
-
-	for rows.Next() {
-		err = rows.Scan(&export.ExportID, &export.ExportName)
-		if err != nil {
-			return export, err
+	if err := row.Scan(&export.ExportID, &export.ExportName); err != nil {
+		if err == sql.ErrNoRows {
+      return export, fmt.Errorf("No export with id: %d", id)
 		}
+    return export, fmt.Errorf("Export %d: %v", id, err)
 	}
 
 	return export, nil

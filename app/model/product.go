@@ -1,5 +1,10 @@
 package model
 
+import (
+	"database/sql"
+	"fmt"
+)
+
 func FetchProducts() ([]Product, error) {
 	var products []Product
 	var product Product
@@ -28,18 +33,17 @@ func FetchProduct(product_id uint64) (Product, error) {
 	var product Product
 
 	sqlQuery := `SELECT * FROM products WHERE product_id=$1`
-	rows, err := DB.Query(sqlQuery, product_id)
-	if err != nil {
-		return product, err
-	}
-	for rows.Next() {
-		err = rows.Scan(&product.ProductID, &product.ProductName, &product.Price)
-		if err != nil {
-			return product, err
-		}
+
+	row := DB.QueryRow(sqlQuery, product_id)
+
+	if err := row.Scan(&product.ProductID, &product.ProductName, &product.Price); err != nil {
+		if err == sql.ErrNoRows {
+      return product, fmt.Errorf("No product with id %d", product_id)
+    }
+    return product, fmt.Errorf("Product %d: %v", product_id, err)
 	}
 
-	return product, nil
+  return product, nil
 }
 
 func CreateProduct(product Product) error {

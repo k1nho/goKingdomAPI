@@ -51,7 +51,6 @@ func GetExport(w http.ResponseWriter, r *http.Request) {
 // /api/kingdom/exports (POST)
 func CreateExport(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
- 
   var export model.Exports
 
   err := json.NewDecoder(r.Body).Decode(&export)
@@ -62,6 +61,30 @@ func CreateExport(w http.ResponseWriter, r *http.Request) {
   }
 
   err = model.CreateExport(export)
+  if err != nil {
+    w.WriteHeader(http.StatusInternalServerError)
+    w.Write([]byte(err.Error()))
+    return
+  }
+
+  w.WriteHeader(http.StatusOK) 
+  
+}
+
+// /api/kingdom/exports/{export_id}
+func UpdateExport(w http.ResponseWriter, r *http.Request) {
+  w.Header().Set("Content-Type", "application/json")
+  var export model.Exports
+  
+
+  err := json.NewDecoder(r.Body).Decode(&export)
+  if err != nil {
+    w.WriteHeader(http.StatusInternalServerError)
+    w.Write([]byte(err.Error()))
+    return
+  }
+
+  err = model.UpdateExport(export)
   if err != nil {
     w.WriteHeader(http.StatusInternalServerError)
     w.Write([]byte(err.Error()))
